@@ -1,6 +1,10 @@
+#### VERSION ####
 version: '3.7'
 
+#### SERVICES ####
 services:
+  
+#### DATABASE MONGO ####
   mongo:
     image: mongo:4.0.10
     container_name: mongo
@@ -9,9 +13,10 @@ services:
       - ./data/db:/data/db
     ports:
       - 27017:27017
-  
+
+#### VISUALIZER MONGO ####
   mongo-express:
-    image: mongo-express:0.54.0
+    image: mongo-express:0.54
     container_name: mongo-express
     restart: always
     ports:
@@ -26,10 +31,15 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
     links:
       - mongo
-  
-  # backend:
-  #   build: ./sv
-  #   container_name: backend
-  #   restart: always
-  #   volumes:
-  #     - ./sv:/app
+
+#### BACKEND IN NODE #### 
+  backend:
+    build: ./sv
+    container_name: backend
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 3000:3000
+    volumes:
+      - ./sv/src:/app/src
