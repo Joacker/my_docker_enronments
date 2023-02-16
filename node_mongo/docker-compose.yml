@@ -39,6 +39,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    environment:
+       - CHOKIDAR_USEPOLLING=true
     ports:
       - 3000:3000
     volumes:
