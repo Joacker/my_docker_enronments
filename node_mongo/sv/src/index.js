@@ -13,5 +13,6 @@ const app = express()
 app.use(morgan('dev'));
 
 app.listen(process.env.PORT, () => {
+    console.log("hola")
     console.log(`Server is running on port ${process.env.PORT}`);
 });

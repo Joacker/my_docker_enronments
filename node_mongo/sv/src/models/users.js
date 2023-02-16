@@ -29,4 +29,19 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+userSchema.statics.signup = signup;
+
 mongoose.model('user', userSchema, 'users');
+
+function signup(user){
+    if(!user.email || !isValidEmail(user.email)) throw new Error('Email is invalid');
+    if(!user.password ) throw new Error('Password is required');
+    if(!user.firstname) throw new Error('Firstname is required');
+    if(!user.lastname) throw new Error('Lastname is required');
+
+    return this.findOne({email: user.email})
+    .then(user => {
+        if(user) throw new Error('Email already exists');
+        return this.create(user);
+    })
+}
