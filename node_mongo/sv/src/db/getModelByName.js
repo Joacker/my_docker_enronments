@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-require('../models/users');
+require('../models/user');
 
 function getModelByName(name) {
     return mongoose.model(name);
