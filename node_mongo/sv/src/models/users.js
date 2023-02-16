@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -42,6 +43,16 @@ function signup(user){
     return this.findOne({email: user.email})
     .then(user => {
         if(user) throw new Error('Email already exists');
-        return this.create(user);
+        
+        const newUser = new this({
+            email: user.email,
+            password: bcrypt.hashSync(user.password, 9),
+            firstname: user.firstname,
+            lastname: user.lastname,
+    })
+    return this.create(newUser);
+    })
+    .then (user => {
+        return user;
     })
 }
