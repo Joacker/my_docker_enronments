@@ -36,6 +36,8 @@ userSchema.statics.signup = signup;
 mongoose.model('user', userSchema, 'users');
 
 function signup(userInfo){
+    console.log(userInfo.email)
+    console.log(userInfo)
     if(!userInfo.email || !isValidEmail(userInfo.email)) throw new Error('Email is invalid');
     if(!userInfo.password ) throw new Error('Password is required');
     if(!userInfo.firstname) throw new Error('Firstname is required');
