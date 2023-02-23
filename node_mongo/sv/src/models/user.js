@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { isValidEmail } = require('../helpers');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -32,6 +34,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.signup = signup;
+userSchema.statics.sendConfirmationEmail = sendConfirmationEmail;
 
 mongoose.model('user', userSchema, 'users');
 
@@ -55,6 +58,28 @@ function signup(userInfo){
     })
     return this.create(newUser);
     })
-    .then (userCreated => userCreated)
+    //.then (userCreated => userCreated)
+    .then (userCreated => this.sendConfirmationEmail(userCreated))
     .then (user => user)
+}
+
+function sendConfirmationEmail(user){
+    let transported = nodemailer.createTransport({
+        host:  process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        secure: false,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+    var token = jwt.sign({email: user.email}, process.env.JWT_SECRET);
+
+    const urlConfirm = `${process.env.API_GATEWAY_URL}/account/confirm/${token}`;
+    return transported.sendMail({
+        from: process.env.EMAIL_ADMIN_ADRESS,
+        to: user.email,
+        subject: 'Confirm your email',
+        html: `<h1>Confirm your email</h1>`
+    })
 }
