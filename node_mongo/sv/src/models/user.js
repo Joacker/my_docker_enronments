@@ -80,6 +80,6 @@ function sendConfirmationEmail(user){
         from: process.env.EMAIL_ADMIN_ADRESS,
         to: user.email,
         subject: 'Confirm your email',
-        html: `<h1>Confirm your email</h1>`
-    })
+        html: `<h1>Confirm your email <a href="${urlConfirm}">Confirm</a><></h1>`
+    }).then(() => user);
 }
