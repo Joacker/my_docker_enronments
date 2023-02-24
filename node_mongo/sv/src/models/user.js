@@ -35,6 +35,8 @@ const userSchema = new mongoose.Schema({
 
 userSchema.statics.signup = signup;
 userSchema.statics.sendConfirmationEmail = sendConfirmationEmail;
+userSchema.statics.confirmAccount = confirmAccount;
+userSchema.statics.login = login;
 
 mongoose.model('user', userSchema, 'users');
 
@@ -63,7 +65,7 @@ function signup(userInfo){
     .then (user => user)
 }
 
-function sendConfirmationEmail(user){
+async function sendConfirmationEmail(user){
     let transported = nodemailer.createTransport({
         host:  process.env.EMAIL_HOST,
         port: process.env.EMAIL_PORT,
@@ -77,9 +79,55 @@ function sendConfirmationEmail(user){
 
     const urlConfirm = `${process.env.API_GATEWAY_URL}/account/confirm/${token}`;
     return transported.sendMail({
-        from: process.env.EMAIL_ADMIN_ADRESS,
+        from: process.env.EMAIL_ADMIN_ADDRESS,
         to: user.email,
-        subject: 'Confirm your email',
-        html: `<h1>Confirm your email <a href="${urlConfirm}">Confirm</a><></h1>`
+        subject: 'Please confirm your email',
+        html: `<h1>Confirm your email <a href="${urlConfirm}">Confirm</a></h1>`
     }).then(() => user);
+}
+
+async function confirmAccount(token){
+    var email = null;
+    try{
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        email = payload.email;
+    }catch(err){
+        throw new Error('Invalid token');
+    }
+    
+    return this.findOne({ email })
+    .then(user => {
+        if(!user) throw new Error('User not found');
+        if(user.emailVerified) throw new Error('user already verified')
+        
+        user.emailVerified = true;
+        return user.save();
+    })
+}
+
+async function login(email, password){
+    if (!isValidEmail(email)) throw new Error('Email is invalid');
+
+    return this.findOne({ email })
+    .then(user => {
+        if(!user) throw new Error('User not found');
+        if(!user.emailVerified) throw new Error('User not verified');
+        
+        const isMatch = bcrypt.compareSync(password, user.password);
+        if(!isMatch) throw new Error('Incorrect credentials');
+
+        const userObject = {
+            _id: user._id,
+            email: user.email,
+            emailVerified: user.emailVerified,
+            firstname: user.firstname,
+            lastname: user.lastname,
+        };
+        const access_token = jwt.sign(userObject, process.env.JWT_SECRET, { 
+            expiresIn: '4h' 
+        });
+        return {
+            access_token,
+        };
+    })
 }

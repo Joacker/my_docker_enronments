@@ -1,8 +1,10 @@
+'use strict';
 const express = require('express');
 const morgan = require('morgan');
 const _connect = require('./db/connect');
 const bodyParser = require('body-parser');
-const userRoutes = require('./routes/userRouter');    
+const userRoutes = require('./routes/userRouter');
+const { isAuthenticated } = require('./middlewares');  
 
 require('dotenv').config();
 // mongo connection
@@ -15,6 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(isAuthenticated);
 
 // Routes
 app.use('/account', userRoutes);

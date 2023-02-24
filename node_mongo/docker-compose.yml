@@ -3,7 +3,7 @@ version: '3.7'
 
 #### SERVICES ####
 services:
-  
+
 #### DATABASE MONGO ####
   mongo:
     image: mongo:4.0.10
@@ -32,7 +32,7 @@ services:
     links:
       - mongo
 
-#### BACKEND IN NODE #### 
+#### BACKEND IN NODE ####
   backend:
     build: ./sv
     container_name: backend
