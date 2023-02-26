@@ -17,10 +17,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(isAuthenticated);
+//app.use(isAuthenticated);
 
 // Routes
-app.use('/account', userRoutes);
+//app.use('/account', userRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);

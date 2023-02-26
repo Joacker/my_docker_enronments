@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js",
+    "start": "nodemon src/index.js",
     "dev": "nodemon src/index.js"
   },
   "author": "",
@@ -17,12 +17,14 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.9.1",
     "morgan": "^1.10.0",
     "node-fetch": "3.3.0",
     "nodemailer": "^6.9.1",
-    "nodemon": "^2.0.20",
-    "npm": "^8.7.0"
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

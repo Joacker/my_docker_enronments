@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 function isAuthenticated(req, res, next) {
   const access_token = req.headers.access_token;
   if (!access_token) {
@@ -5,7 +7,7 @@ function isAuthenticated(req, res, next) {
   }
   const user = verifyAuthToken(access_token); 
   if (!user) {
-    return res.status(403).json({ success: false, message: 'User is not authorized' });
+    return res.status(401).json({ success: false, message: 'User is not authorized' });
   }
   req.user = user;
   next();
@@ -14,10 +16,11 @@ function isAuthenticated(req, res, next) {
 function verifyAuthToken(token) {
   var user = null;
   try {
-    user =  jwt.verify(token, process.env.JWT_SECRET);
+    user =  jwt.verify(token, "secret");
   } catch (err) {
     throw new Error('Invalid token');
-  } 
+  }
+
   return user;
 }
 

@@ -37,6 +37,7 @@ userSchema.statics.signup = signup;
 userSchema.statics.sendConfirmationEmail = sendConfirmationEmail;
 userSchema.statics.confirmAccount = confirmAccount;
 userSchema.statics.login = login;
+userSchema.statics.findUserById = findUserById;
 
 mongoose.model('user', userSchema, 'users');
 
@@ -128,6 +129,19 @@ async function login(email, password){
         });
         return {
             access_token,
+        };
+    })
+}
+
+async function findUserById(_id) {
+    return this.findById(_id)
+    .then(user => {
+        return {
+            _id: user._id,
+            email: user.email,
+            emailVerified: user.emailVerified,
+            firstname: user.firstname,
+            lastname: user.lastname,
         };
     })
 }
