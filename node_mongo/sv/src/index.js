@@ -4,7 +4,8 @@ const morgan = require('morgan');
 const _connect = require('./db/connect');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/userRouter');
-const { isAuthenticated } = require('./middlewares');  
+const todoRoutes = require('./routes/todoRouter');
+//const { isAuthenticated } = require('./middlewares');  
 
 require('dotenv').config();
 // mongo connection
@@ -20,7 +21,8 @@ app.use(bodyParser.urlencoded({
 //app.use(isAuthenticated);
 
 // Routes
-//app.use('/account', userRoutes);
+app.use('/account', userRoutes);
+app.use('/todos', todoRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);

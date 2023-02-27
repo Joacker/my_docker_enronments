@@ -41,11 +41,11 @@ module.exports.login = function (req, res) {
 };
 
 module.exports.current_user = function (req, res) {
-    if (!req.user) return res.status(200).send({ success: false, data: {user: null} });
+    if (!req.user) return res.status(200).send({ success: false, data: { user: null } });
 
     const User = getModelByName('user');
 
-    return User.findById(req.user._id)
+    return User.findUserById(req.user._id)
     .then(user => {
         res.status(200).send({ success: true, data: {user} });
     }).catch(err => {
