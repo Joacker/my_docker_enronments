@@ -6,9 +6,9 @@ module.exports.create = function (req, res) {
     const Todo = getModelByName('todo');
 
     try{
-        Todo.create(req.body.todo)
+        Todo.create(req.body.todo, req.user)
         .then((todo) => {
-            res.status(200).send({success: true, message: 'Todo created successfully',data: { todo }});
+            res.status(200).send({success: true, data: { todo }});
         }).catch(err => {
              res.status(200).send({success: false, message: err.message})
         })

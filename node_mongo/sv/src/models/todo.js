@@ -23,12 +23,12 @@ mongoose.model('todo', TodoSchema, 'todos');
 
 // methods
 function create(todoInfo, user) {
-    console.log(user)
+    console.log(todoInfo)
     if (!todoInfo.title) throw new Error('Title is required');
 
     todoInfo.userId = user._id;
     
     //console.log(todoInfo.userId)
     const todo = new this(todoInfo);
-    return todo.save(); 
+    return todo.save();
 };

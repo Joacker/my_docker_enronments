@@ -41,6 +41,7 @@ userSchema.statics.findUserById = findUserById;
 
 mongoose.model('user', userSchema, 'users');
 
+//static methods
 function signup(userInfo){
     console.log(userInfo.email)
     console.log(userInfo)
@@ -124,7 +125,7 @@ async function login(email, password){
             firstname: user.firstname,
             lastname: user.lastname,
         };
-        const access_token = jwt.sign(userObject, process.env.JWT_SECRET, { 
+        const access_token = jwt.sign(Object.assign({},userObject), process.env.JWT_SECRET, { 
             expiresIn: '4h' 
         });
         return {
@@ -142,6 +143,6 @@ async function findUserById(_id) {
             emailVerified: user.emailVerified,
             firstname: user.firstname,
             lastname: user.lastname,
-        };
-    })
+        }
+    });
 }
