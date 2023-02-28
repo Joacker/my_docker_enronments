@@ -19,6 +19,9 @@ const TodoSchema = new mongoose.Schema({
 
 TodoSchema.statics.create = create;
 TodoSchema.statics.getAll = getAll;
+TodoSchema.statics.getOne = getOne;
+TodoSchema.statics.updateTodo = updateTodo;
+TodoSchema.statics.deleteTodo = deleteTodo;
 
 mongoose.model('todo', TodoSchema, 'todos');
 
@@ -36,4 +39,33 @@ function create(todoInfo, user) {
 
 function getAll(user) {
     return this.find({ userId: user._id });
+}
+
+function getOne(id, user) {
+    return this.findOne({ _id: id, userId: user._id })
+    .then(todo => {
+        if (!todo) throw new Error('Todo not found');
+
+        return todo;
+    })
+}
+
+function updateTodo(id, todoInfo, user) {
+    return this.findOne({ _id: id, userId: user._id })
+    .then(todo => {
+        if (!todo) throw new Error('Todo not found');
+
+        todo.title = todoInfo.title;
+        todo.description = todoInfo.description;
+        return todo.save();
+    })
+}
+
+function deleteTodo(id, user) {
+    return this.findOne({ _id: id, userId: user._id })
+    .then(todo => {
+        if (!todo) throw new Error('Todo not found');
+
+        return todo.remove();
+    })
 }
