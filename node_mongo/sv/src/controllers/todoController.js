@@ -16,3 +16,14 @@ module.exports.create = function (req, res) {
         res.status(500).send({success: false, err: err.message});
     }
 };
+
+module.exports.getTodos = function (req, res) {
+    const Todo = getModelByName("todo");
+
+    Todo.getAll(req.user)
+    .then((todos) => {
+        res.status(200).send({success: true, data: { todos }});
+    }).catch(err => {
+        res.status(200).send({success: false, error: err.message})
+    })
+};

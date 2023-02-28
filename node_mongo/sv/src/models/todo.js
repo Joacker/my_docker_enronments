@@ -18,6 +18,7 @@ const TodoSchema = new mongoose.Schema({
 });
 
 TodoSchema.statics.create = create;
+TodoSchema.statics.getAll = getAll;
 
 mongoose.model('todo', TodoSchema, 'todos');
 
@@ -32,3 +33,7 @@ function create(todoInfo, user) {
     const todo = new this(todoInfo);
     return todo.save();
 };
+
+function getAll(user) {
+    return this.find({ userId: user._id });
+}
