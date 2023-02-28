@@ -18,7 +18,7 @@ const TodoSchema = new mongoose.Schema({
 });
 
 TodoSchema.statics.create = create;
-TodoSchema.statics.getAll = getAll;
+TodoSchema.statics.getTodos = getTodos;
 TodoSchema.statics.getOne = getOne;
 TodoSchema.statics.updateTodo = updateTodo;
 TodoSchema.statics.deleteTodo = deleteTodo;
@@ -37,7 +37,7 @@ function create(todoInfo, user) {
     return todo.save();
 };
 
-function getAll(user) {
+function getTodos(user) {
     return this.find({ userId: user._id });
 }
 
@@ -52,7 +52,7 @@ function getOne(id, user) {
 
 function updateTodo(id, todoInfo = {}, user) {
     const update = {};
-    if (todoInfo.title) throw new Error('Title is required');
+    if (todoInfo.title) update.title = todoInfo.title;
     if (todoInfo.description) update.description = todoInfo.description;
 
     return this.findOne({ _id: id, userId: user._id })
@@ -73,4 +73,4 @@ function deleteTodo(id, user) {
 
         return todo.remove();
     })
-}
+};

@@ -20,7 +20,7 @@ module.exports.create = function (req, res) {
 module.exports.getTodos = function (req, res) {
     const Todo = getModelByName("todo");
 
-    Todo.getAll(req.user)
+    Todo.getTodos(req.user)
     .then((todos) => {
         res.status(200).send({success: true, data: { todos }});
     }).catch(err => {
