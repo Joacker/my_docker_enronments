@@ -50,16 +50,21 @@ function getOne(id, user) {
     })
 }
 
-function updateTodo(id, todoInfo, user) {
+function updateTodo(id, todoInfo = {}, user) {
+    const update = {};
+    if (todoInfo.title) throw new Error('Title is required');
+    if (todoInfo.description) update.description = todoInfo.description;
+
     return this.findOne({ _id: id, userId: user._id })
     .then(todo => {
         if (!todo) throw new Error('Todo not found');
+        if (Object.keys(update).length === 0) throw new Error('Nothing to update');
+        
+        todo.set(update);
 
-        todo.title = todoInfo.title;
-        todo.description = todoInfo.description;
         return todo.save();
-    })
-}
+    });
+};
 
 function deleteTodo(id, user) {
     return this.findOne({ _id: id, userId: user._id })
